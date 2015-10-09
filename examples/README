@@ -1,0 +1,22 @@
+# Example use of batch RESP code
+
+# First, make sure that the ../python directory and the OEChem toolkits are in Python path.
+# For John's Mac OS X:
+setenv PYTHONPATH ../python:${HOME}/local/src/openeye/wrappers/python:${HOME}/local/src/openeye/wrappers/libs
+setenv DYLD_LIBRARY_PATH ${HOME}/local/src/openeye/wrappers/libs
+
+# Set up files/directories for batch processing by GAMESS.
+mkdir molecules
+python2.3 ../python/setupBatchResp.py --input guthrie.mol2 --outdir molecules/
+
+# Now submit the jobs to the batch queue.  A convenience script is provided to submit these jobs as sets of SGE array jobs for each molecule.
+cd molecules
+sh submit_all.sh
+
+# Wait patiently...
+
+# Analyze the results for each molecule separately to produce a mol2 file.
+# The mol2 file with RESP charges will end up in the same dir as the GAMESS calculation was run.
+python2.3 ../python/analyzeBatchResp.py --dir molecules/ch3oph
+
+
